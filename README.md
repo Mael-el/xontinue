@@ -140,7 +140,101 @@ curl -X POST http://localhost:3000/api/seed
 | `npm run test:watch` | Tests en mode watch |
 | `npm run db:embedded` | Base PostgreSQL embarquée (PGlite, dev sans install) |
 | `npm run db:push` | Synchronise le schéma avec la DB |
+| `npm run realtime` | Serveur temps réel socket.io :3001 (espaces + messagerie) |
+| `npm run dev:realtime` | Dev app + temps réel dans le même terminal |
 | `npx drizzle-kit studio` | Interface visuelle Drizzle |
+
+---
+
+## 🏢 Espaces de travail (Discord-like) & 💬 Messagerie (WhatsApp-like)
+
+Deux modules temps réel complets, intégrés dans **l'actuelle pile**
+(Drizzle + Route Handlers ; pas de Prisma/NestJS/Redis — voir arbitrages
+ci-dessous) :
+
+### Espaces de travail — `src/app/workspaces`, `src/lib/workspaces`
+
+- **Workspaces** créés avec structure par défaut : catégorie « Général »,
+  salons « général » (texte) + « Vocal », rôles **Admin** (toutes
+  permissions) / **Membre** (par défaut).
+- **Salons** : `text | voice | announcement | forum`, ordonnés par catégorie.
+  Les annonces sont réservées aux admins ; les vocaux n'acceptent pas de message.
+- **Rôles & permissions granulaires** : champ de bits (10 permissions :
+  `MANAGE_WORKSPACE`, `MANAGE_CHANNELS`, `MANAGE_MEMBERS`, `MANAGE_ROLES`,
+  `KICK_MEMBERS`, `BAN_MEMBERS`, `SEND_MESSAGES`, `VIEW_CHANNELS`,
+  `CONNECT_VOICE`, `SPEAK`) — voir `permissions.ts` + tests. Permissions
+  effectives = OU des rôles ; le propriétaire a tout implicitement.
+  Garde anti-escalade : impossible d'attribuer une permission qu'on n'a pas.
+- **Invitations** : codes 8 caractères sans confusion (sans `0/O/1/I`),
+  expiration + nombre max d'utilisations, jointure idempotente
+  (`/workspaces/invite/[code]` → aperçu public + accepter).
+- **Messages** : pagination curseur (`?before=ISO`), réponses citées,
+  édition/suppression (auteur ; modération pour `MANAGE_WORKSPACE`).
+
+### Messagerie — `src/app/messages`, `src/lib/chat`
+
+- **Conversations 1-1 idempotentes par paire** (une seule conversation
+  directe par duo d'utilisateurs) et **groupes** (créateur admin).
+- **Accusés de lecture ✓ / ✓✓ / ✓✓ bleu** : pointeur de lecture par
+  membre + `message_reads` ; statut calculé sémantique WhatsApp
+  (`read-status.ts`, fonction pure testée : lu = lu par TOUS).
+- **Badges « non lus »** : compteur par membre, remise à zéro par
+  `POST .../read` (qui émet `message:read` pour faire bleuir les ✓✓).
+- **Réactions emoji** : toggle par utilisateur, **20 emojis distincts max**
+  par message (garde-fou métier testé), agrégation diffusée en direct.
+- **Réponses citées**, édition, suppression douce (« message supprimé »).
+- **Pièces jointes** : image / fichier / **vocal WebM-OGG** (avec durée,
+  enregistré via `VoiceRecorder` → MediaRecorder) / vidéo — upload base64
+  jusqu'à 10 Mo, stockage local `public/uploads/` (point d'extension S3/R2).
+- **Présence** : statut mémoire TTL **120 s** rafraîchi par heartbeat
+  **30 s** (interface compatible Redis) + « vu à … » persisté en base.
+- **Appels audio/vidéo WebRTC** : signalisation relayée par socket.io
+  (`call:signal`), maillage full-mesh `rtc-mesh.ts` (polite peer),
+  cycle `ringing → ongoing → ended | missed | declined` en base.
+
+### Temps réel — `realtime/server.ts` (processus dédié, port 3001)
+
+```
+Next.js (REST :3000) ──HTTP interne /internal/{emit,presence}──▶ socket.io :3001
+navigateurs ───────────────────WS (JWT)────────────────────────▶ /workspace /chat
+```
+
+- **Auth** : cookie `as_access` (même hôte) **ou** jeton court
+  « realtime » 10 min (`GET /api/v1/realtime/token`) — requis quand les
+  cookies httpOnly ne traversent pas les hôtes (preview, prod multi-domaines).
+- **Pont HTTP** : les Route Handlers diffusent leurs événements au serveur
+  temps réel via `/internal/emit` (secret partagé `REALTIME_EMIT_SECRET`,
+  loopback). Best-effort : l'API REST reste fonctionnelle sans le serveur WS.
+- **Événements** : `message:new|update|delete`, `typing:update`,
+  `reaction:update`, `message:read`, `presence:update`, `voice:state`,
+  `voice:signal` (relais WebRTC), `call:incoming|joined|left|ended|signal`.
+- **Rooms** : `user:<id>` (auto), `channel:<id>`, `conversation:<id>`
+  (adhésion vérifiée en BDD avant le join).
+
+### Points d'extension documentés (non implémentés)
+
+- **Chiffrement E2E** : `PUT/GET /api/v1/chat/encryption-keys` (clés
+  publiques par utilisateur, le serveur ne stocke jamais les privées) +
+  colonne `conversations.is_encrypted` — la logique de chiffrement côté
+  client (X25519/AES ou Signal) reste à faire ; les serveurs continuent
+  de stocker le clair en v1.
+- **Push notifications** (FCM/Web Push) : relais actuel = notifications
+  in-app automatiques aux membres hors ligne (cloche du site).
+- **Présence multi-instances** : remplacer `InMemoryPresenceStore`
+  (interface TTL set/get) par un client Redis.
+
+### Arbitrages d'implémentation (spec vs pile du projet)
+
+| Spec demandée | Implémenté | Pourquoi |
+|---|---|---|
+| NestJS + contrôleurs | Next.js Route Handlers | pile existante du dépôt, zéro réécriture |
+| Prisma | Drizzle ORM (mêmes tables/relations) | ORM déjà en place |
+| Redis (présence/file) | mémoire + TTL, interface compatible | aucune dépendance externe en dev |
+| Swagger | cette documentation + headers de routes | uniquement sur demande |
+
+La surface REST (`/api/v1/workspaces/*`, `/api/v1/chat/*`), les noms
+d'événements WS, la sémantique ✓✓ et le modèle rôles+permissions
+suivent la spec à l'identique.
 
 ---
 

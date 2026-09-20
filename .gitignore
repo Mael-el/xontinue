@@ -30,6 +30,9 @@ yarn-error.log*
 # base de données embarquée (PGlite — dev local)
 /.pglite/
 
+# Pièces jointes uploadées en local (messagerie)
+public/uploads/
+
 # vercel
 .vercel
 

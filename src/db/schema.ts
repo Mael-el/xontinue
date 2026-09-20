@@ -851,3 +851,10 @@ export const jobApplicationsRelations = relations(
     }),
   })
 );
+
+// ============================================================
+// MODULES TEMPS RÉEL — ré-exportés (déclarés dans leurs fichiers)
+// ============================================================
+
+export * from "./schema-workspace";
+export * from "./schema-chat";
