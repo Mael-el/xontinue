@@ -10,7 +10,7 @@
 
 import { NextResponse } from "next/server";
 import { requireUser, AuthError } from "@/lib/auth";
-import { isMockProvider } from "@/lib/payments/provider";
+import { isMockProvider, PaymentConfigError } from "@/lib/payments/provider";
 import {
   findPaymentByReference,
   settlePaymentFailed,
@@ -23,8 +23,21 @@ type RouteContext = { params: Promise<{ reference: string }> };
 
 export async function POST(req: Request, { params }: RouteContext) {
   try {
-    // Garde-fou : route de simulation → provider mock exigé
-    if (!isMockProvider()) {
+    // Garde-fou : route de simulation → provider mock exigé ET autorisé
+    // (interdit en production sauf dérogation explicite)
+    let mockActive = false;
+    try {
+      mockActive = isMockProvider();
+    } catch (error) {
+      if (error instanceof PaymentConfigError) {
+        return NextResponse.json(
+          { ok: false, error: "Confirmation manuelle désactivée hors mode démo" },
+          { status: 403 }
+        );
+      }
+      throw error;
+    }
+    if (!mockActive) {
       return NextResponse.json(
         { ok: false, error: "Confirmation manuelle désactivée hors mode démo" },
         { status: 403 }

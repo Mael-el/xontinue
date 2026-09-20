@@ -21,8 +21,27 @@ export interface AuthPayload extends JWTPayload {
   sessionId?: string;
 }
 
+/** Secret de développement — JAMAIS utilisable en production. */
+const DEV_SECRET = "africaskills-dev-secret-change-me-32-chars";
+
+/**
+ * Clé de signature HS256.
+ * En production, JWT_SECRET est OBLIGATOIRE, distinct du secret de dev
+ * et suffisamment long (≥ 32 caractères) — sinon on refuse de signer/
+ * vérifier (un secret par défaut permettrait de forger des tokens).
+ */
 function getSecret(): Uint8Array {
-  const secret = process.env.JWT_SECRET || "africaskills-dev-secret-change-me-32-chars";
+  const secret = process.env.JWT_SECRET || DEV_SECRET;
+  if (process.env.NODE_ENV === "production") {
+    if (!process.env.JWT_SECRET || secret === DEV_SECRET) {
+      throw new Error(
+        "JWT_SECRET est obligatoire en production et ne doit pas être la valeur de développement"
+      );
+    }
+    if (secret.length < 32) {
+      throw new Error("JWT_SECRET doit faire au moins 32 caractères en production");
+    }
+  }
   return new TextEncoder().encode(secret);
 }
 

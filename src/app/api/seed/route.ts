@@ -74,7 +74,34 @@ async function seedLessons(): Promise<number> {
   return values.length;
 }
 
-export async function POST() {
+/**
+ * Garde-fou production : le seed devient une opération d'administration
+ * explicite. En production, exiger l'en-tête `x-seed-secret` correspondant
+ * à SEED_SECRET (.env) ; sans SEED_SECRET configuré, la route est fermée.
+ */
+function assertSeedAllowed(req: Request): NextResponse | null {
+  if (process.env.NODE_ENV !== "production") return null;
+
+  const expected = process.env.SEED_SECRET;
+  if (!expected) {
+    return NextResponse.json(
+      { ok: false, error: "Seed désactivé (SEED_SECRET non configuré)" },
+      { status: 403 }
+    );
+  }
+  if (req.headers.get("x-seed-secret") !== expected) {
+    return NextResponse.json(
+      { ok: false, error: "Non autorisé" },
+      { status: 401 }
+    );
+  }
+  return null;
+}
+
+export async function POST(req: Request) {
+  const denied = assertSeedAllowed(req);
+  if (denied) return denied;
+
   try {
     const summary: Record<string, number | string> = {};
 

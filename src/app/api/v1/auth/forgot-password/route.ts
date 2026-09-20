@@ -14,6 +14,7 @@ import {
   checkRateLimit,
   getClientIp,
 } from "@/lib/auth";
+import { sendEmail, resetPasswordEmailTemplate } from "@/lib/messaging/email";
 
 export const dynamic = "force-dynamic";
 
@@ -62,10 +63,11 @@ export async function POST(req: Request) {
         expiresAt: new Date(Date.now() + RESET_TOKEN_TTL_MS),
       });
 
-      // En production : envoi via Resend avec le lien contenant `token`
+      // Envoi réel du lien (Resend si configuré, console en dev)
       const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
       const resetLink = `${baseUrl}/auth/reset-password?token=${token}`;
-      console.log(`[DEV] Reset password link pour ${email} : ${resetLink}`);
+      const tpl = resetPasswordEmailTemplate(resetLink);
+      void sendEmail({ to: email, ...tpl });
     }
 
     return NextResponse.json({

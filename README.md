@@ -88,7 +88,6 @@ npm install
 # 2. Créer l'environnement pointant sur la base embarquée
 cp .env.example .env
 #   DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:5432/postgres
-#   DATABASE_POOL_MAX=1        ← obligatoire : PGlite n'accepte qu'1 connexion
 
 # 3a. Terminal 1 — base de données embarquée (données persistées dans .pglite/)
 npm run db:embedded
@@ -101,8 +100,12 @@ npm run dev
 curl -X POST http://localhost:3000/api/seed
 ```
 
-> PGlite est un outil de **développement** — en production, utiliser un vrai
-> PostgreSQL 16 (option B) et retirer `DATABASE_POOL_MAX`.
+> Le serveur embarqué multiplexe plusieurs connexions simultanées
+> (`EMBEDDED_DB_MAX_CONNECTIONS`, défaut 10) — requêtes parallèles des
+> pages et plusieurs process supportés. PGlite reste un outil de
+> **développement** : en production, utiliser un vrai PostgreSQL 16.
+> (Si une ancienne version mono-connexion est utilisée, mettre
+> `DATABASE_POOL_MAX=1`.)
 
 ### Option B — Avec PostgreSQL 16
 
@@ -242,25 +245,34 @@ Voir [`src/db/schema.ts`](./src/db/schema.ts) pour le détail.
 Le module v1 (`/api/v1/payments`) implémente le flux réel des providers de
 paiement, derrière une **abstraction interchangeable** (`src/lib/payments/`) :
 
-1. `POST /api/v1/payments` → initiation → paiement **pending** + instructions
+1. `POST /api/v1/payments` → initiation → paiement **pending** (+ `redirectUrl`
+   vers la page de paiement hébergée FedaPay : MTN, Orange, Moov, cartes)
 2. Le provider confirme plus tard via `POST /api/v1/payments/webhook`
-   (en-tête `x-webhook-secret`, remplacé par une signature HMAC en prod)
+   (**signature HMAC-SHA256** du corps brut — `x-fedapay-signature` /
+   `x-signature` — vérifiée en temps constant)
 3. Au succès → paiement **success** + **inscription auto** + notification
 
-Le provider actif est choisi par `PAYMENTS_PROVIDER` (`mock` par défaut,
-`fedapay` / `kkiapay` quand les clés sont configurées). En mode **mock**, la
-confirmation est simulée par le bouton démo du checkout qui appelle
-`POST /api/v1/payments/[reference]/confirm`.
+Le provider actif est choisi par `PAYMENTS_PROVIDER` :
 
-- **MTN Mobile Money** 🟡 · **Orange Money** 🟠 · **Moov Money** 🔵
-- **FedaPay** 💳 · **KkiaPay** ⚡
+| Valeur | Comportement |
+|--------|--------------|
+| `mock` (défaut) | Simulation locale — confirmation via `POST /api/v1/payments/[reference]/confirm` (bouton démo). **Interdit en production** (503) sauf `PAYMENTS_ALLOW_MOCK_IN_PROD=true` |
+| `fedapay` | **Intégration réelle implémentée** : création de transaction → token → page de paiement hébergée. Exige `FEDAPAY_SECRET_KEY` (+ `FEDAPAY_MODE=sandbox|live`) |
+| `kkiapay` | Réservé — KkiaPay s'intègre par widget client (module dédié à venir) |
 
-**En production**, il reste à :
+Garde-fous anti-mauvaise-configuration : un provider exigé sans clé, ou le mock
+en production, lève une erreur au lieu d'un repli silencieux (503 côté API, la
+route démo `confirm` renvoie 403 en production).
 
-1. Implémenter l'appel API dans `FedaPayProvider.initiate()` (squelette prêt)
-2. Vérifier la signature HMAC du webhook au lieu du secret d'en-tête
-3. Configurer l'URL du webhook dans le back-office provider
-4. Implémenter la réconciliation comptable
+Pour passer en prod FedaPay :
+
+1. Renseigner `FEDAPAY_SECRET_KEY` / `FEDAPAY_PUBLIC_KEY` (compte FedaPay)
+2. `FEDAPAY_MODE=live` en production
+3. `PAYMENTS_PROVIDER=fedapay` et un `PAYMENTS_WEBHOOK_SECRET` long/aléatoire
+4. Dans le back-office FedaPay : déclarer le webhook
+   `https://<domaine>/api/v1/payments/webhook` avec ce secret
+5. Réconciliation comptable : les paiements `pending` orphelins restent
+   visibles dans `GET /api/v1/payments` (par utilisateur) et la table `payments`
 
 Exemple d'appel (authentifié) :
 
@@ -305,8 +317,8 @@ curl -X POST http://localhost:3000/api/v1/payments \
 | `/api/v1/recruiter/applications/[id]` | PATCH | 🔐 Changer le statut d'une candidature → notifie le candidat |
 | `/api/v1/payments` | GET / POST | 🔐 Historique / initier un paiement (→ pending, anti-doublon) |
 | `/api/v1/payments/[reference]` | GET | 🔐 Statut d'un paiement (polling checkout) |
-| `/api/v1/payments/[reference]/confirm` | POST | 🔐 🧪 Démo mock : simule la confirmation Mobile Money |
-| `/api/v1/payments/webhook` | POST | 🔑 Callback provider (`x-webhook-secret`) → règlement idempotent |
+| `/api/v1/payments/[reference]/confirm` | POST | 🔐 🧪 Démo mock : simule la confirmation Mobile Money (403 en production) |
+| `/api/v1/payments/webhook` | POST | 🔑 Callback provider signé **HMAC-SHA256** (`x-fedapay-signature`/`x-signature`) ou secret partagé → règlement idempotent (503 si non configuré en prod) |
 | `/api/v1/courses/[slug]/reviews` | GET | Avis d'un cours + moyenne + distribution (public) |
 | `/api/v1/courses/[slug]/reviews` | POST / DELETE | 🔐 Déposer/modifier (upsert) / supprimer mon avis — **étudiants inscrits uniquement**, note du cours recalculée |
 | `/api/v1/leaderboard` | GET | Classement public XP (`?limit=`) + `currentUser` si connecté |
@@ -345,6 +357,71 @@ seuil d'XP est atteint (voir `src/lib/gamification.ts`).
 - 💎 **Rare** — bleu ciel
 - ⚡ **Epic** — violet
 - 🌟 **Legendary** — or → rouge
+
+---
+
+## 🚢 Mise en production
+
+### Checklist des variables OBLIGATOIRES
+
+| Variable | Pourquoi |
+|----------|----------|
+| `DATABASE_URL` | PostgreSQL 16 managé (Neon, Supabase, Railway, RDS…) |
+| `JWT_SECRET` + `JWT_REFRESH_SECRET` | ≥ 32 caractères aléatoires — **le boot refuse les valeurs de dev** (tokens forgables sinon) |
+| `PAYMENTS_PROVIDER=fedapay` + `FEDAPAY_SECRET_KEY` | Paiements réels (le mock est **bloqué en prod** : 503) |
+| `PAYMENTS_WEBHOOK_SECRET` | Long et aléatoire — le webhook est **refusé (503) sans lui** |
+| `NEXT_PUBLIC_BASE_URL` | `https://<domaine>` — liens emails, callback FedaPay |
+| `RESEND_API_KEY` + `EMAIL_FROM` | Emails transactionnels (OTP, reset). Sans clé : provider console |
+| `AFRICASTALKING_API_KEY` + `AFRICASTALKING_USERNAME` | SMS OTP. Sans clés : provider console |
+| `SEED_SECRET` | Autorise `POST /api/seed` (en-tête `x-seed-secret`) — sinon 403/404 partout |
+
+### Déploiement Docker (auto-hébergement)
+
+```bash
+# 1. Image (aucune base requise au build)
+docker build -t africaskills .
+
+# 2. Conteneur (vraies variables au runtime)
+docker run -d -p 3000:3000 --env-file .env africaskills
+
+# 3. Schéma de base (une fois, depuis la machine qui a accès à la DB)
+npm run db:push
+
+# 4. Données initiales (une fois)
+curl -X POST https://<domaine>/api/seed -H "x-seed-secret: $SEED_SECRET"
+```
+
+L'image est basée sur la sortie **standalone** de Next.js : `node server.js`,
+utilisateur non-root, `HEALTHCHECK` sur `/api/health`.
+
+### Déploiement Vercel / PaaS
+
+- Build command `npm run build`, Node 22 — aucune option spéciale
+- Injecter les mêmes variables d'environnement dans le dashboard
+
+### Configuration FedaPay (back-office)
+
+1. Clés API : dashboard FedaPay → API → copier dans `FEDAPAY_*`
+2. Webhook : ajouter `https://<domaine>/api/v1/payments/webhook`,
+   secret = `PAYMENTS_WEBHOOK_SECRET` (signature `x-fedapay-signature`)
+3. `FEDAPAY_MODE=live` une fois les tests sandbox validés
+
+### Durcissement déjà en place
+
+- En-têtes : `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`,
+  `Permissions-Policy` (certificats publics intégrables en iframe)
+- Rate-limiting en mémoire sur auth, OTP, webhook (→ Redis recommandé
+  en multi-instance, voir `src/lib/auth/rate-limit.ts`)
+- OTP jamais exposés en production (`devOtp` renvoyé uniquement hors prod)
+- `POST /api/seed` fermé en production sans `SEED_SECRET`
+- Cookies `as_access` JWT 15 min + refresh 7 jours rotatif en base
+
+### Restes connus (hors périmètre serveur)
+
+- **KkiaPay** : widget client (kkiapay.js) — module dédié
+- **Meilisearch** : recherche instantanée (actuellement filtres SQL)
+- **Cloudflare R2** : vidéos de cours et avatars volumineux (avatars
+  actuellement sur disque local, monter un volume en Docker)
 
 ---
 
@@ -454,10 +531,11 @@ JWT_REFRESH_SECRET=
 - [x] Offres d'emploi
 - [x] Dashboard étudiant
 
-### Phase 2 — Backend NestJS
+### Phase 2 — Backend & paiements
 - [ ] Migration vers NestJS + Prisma
-- [ ] Authentification JWT
-- [ ] Paiements réels FedaPay/KkiaPay
+- [x] Authentification JWT (+ 2FA TOTP)
+- [x] Paiements réels FedaPay (checkout hébergé + webhook HMAC)
+- [x] Durcissement production (seed protégé, secrets JWT, en-têtes, Docker)
 - [ ] Upload vidéo sur Cloudflare R2
 - [x] Progression réelle + leçons (XP, badges auto — vidéos à brancher sur R2)
 
@@ -465,7 +543,7 @@ JWT_REFRESH_SECRET=
 - [ ] Programme anglais intensif 3 mois
 - [ ] Chat Socket.io (étudiants + mentors)
 - [ ] Recherche Meilisearch
-- [ ] Notifications email + SMS
+- [x] Notifications email + SMS (Resend / Africa's Talking — actives dès clés)
 
 ### Phase 4 — Échelle
 - [ ] Incubateur de startups

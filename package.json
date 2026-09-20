@@ -47,6 +47,7 @@
     "jest-environment-jsdom": "^30.5.2",
     "postcss": "8.5.8",
     "tailwindcss": "4.1.17",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "wait-on": "^9.1.0"
   }
 }

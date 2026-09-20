@@ -15,6 +15,7 @@ import {
   checkRateLimit,
   getClientIp,
 } from "@/lib/auth";
+import { sendEmail, otpEmailTemplate } from "@/lib/messaging/email";
 
 export const dynamic = "force-dynamic";
 
@@ -68,7 +69,9 @@ export async function POST(req: Request) {
           expiresAt: new Date(Date.now() + OTP_TTL_MS),
         });
 
-        console.log(`[DEV] OTP email renouvelé pour ${email} : ${otp}`);
+        // Envoi réel (Resend si configuré, console en dev) — best-effort
+        const tpl = otpEmailTemplate(otp, "Confirme ton email");
+        void sendEmail({ to: email, ...tpl });
 
         return NextResponse.json({
           ok: true,
@@ -112,8 +115,10 @@ export async function POST(req: Request) {
       expiresAt: new Date(Date.now() + OTP_TTL_MS),
     });
 
-    // En production : envoi via Resend + AfricasTalking
-    console.log(`[DEV] OTP email pour ${email} : ${otp}`);
+    // Envoi réel (Resend si configuré, console en dev) — best-effort :
+    // l'inscription ne doit pas échouer si le provider email est en panne.
+    const tpl = otpEmailTemplate(otp, "Bienvenue sur AfricaSkills 🎉");
+    void sendEmail({ to: email, ...tpl });
 
     return NextResponse.json({
       ok: true,

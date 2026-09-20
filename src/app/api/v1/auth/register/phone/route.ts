@@ -15,6 +15,7 @@ import {
   checkRateLimit,
   getClientIp,
 } from "@/lib/auth";
+import { sendSms, otpSmsTemplate } from "@/lib/messaging/sms";
 
 export const dynamic = "force-dynamic";
 
@@ -68,7 +69,8 @@ export async function POST(req: Request) {
           expiresAt: new Date(Date.now() + OTP_TTL_MS),
         });
 
-        console.log(`[DEV] OTP SMS renouvelé pour ${normalizedPhone} : ${otp}`);
+        // Envoi réel (Africa's Talking si configuré, console en dev)
+        void sendSms({ to: normalizedPhone, message: otpSmsTemplate(otp) });
 
         return NextResponse.json({
           ok: true,
@@ -109,8 +111,9 @@ export async function POST(req: Request) {
       expiresAt: new Date(Date.now() + OTP_TTL_MS),
     });
 
-    // En production : envoi via AfricasTalking
-    console.log(`[DEV] OTP SMS pour ${normalizedPhone} : ${otp}`);
+    // Envoi réel (Africa's Talking si configuré, console en dev) —
+    // best-effort : l'inscription ne doit pas dépendre du provider SMS.
+    void sendSms({ to: normalizedPhone, message: otpSmsTemplate(otp) });
 
     return NextResponse.json({
       ok: true,

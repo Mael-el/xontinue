@@ -14,9 +14,42 @@ import { db } from "@/db";
 import { courses, enrollments, payments } from "@/db/schema";
 import { and, desc, eq } from "drizzle-orm";
 import { requireUser, AuthError } from "@/lib/auth";
-import { getPaymentProvider, isMockProvider } from "@/lib/payments/provider";
+import {
+  getPaymentProvider,
+  isMockProvider,
+  PaymentConfigError,
+} from "@/lib/payments/provider";
 
 export const dynamic = "force-dynamic";
+
+
+/** Drapeau « démo » pour l'UI (false si le provider n'est pas résoluble). */
+function isDemoMode(): boolean {
+  try {
+    return isMockProvider();
+  } catch {
+    return false;
+  }
+}
+
+/** Récupère le provider ou renvoie une réponse 503 (mauvaise config). */
+function tryGetProvider() {
+  try {
+    return { provider: getPaymentProvider() };
+  } catch (error) {
+    if (error instanceof PaymentConfigError) {
+      console.error("payments config error:", error.message);
+      return {
+        errorResponse: NextResponse.json(
+          { ok: false, error: "Paiements temporairement indisponibles" },
+          { status: 503 }
+        ),
+      };
+    }
+    throw error;
+  }
+}
+
 
 /** Schéma de validation d'initiation de paiement. */
 const initiateSchema = z.object({
@@ -194,18 +227,35 @@ export async function POST(req: Request) {
           status: pending.status,
           createdAt: pending.createdAt,
         },
-        demo: isMockProvider(),
+        demo: isDemoMode(),
       });
     }
 
     // 5) Initiation via le provider actif → paiement "pending"
-    const provider = getPaymentProvider();
-    const initiated = await provider.initiate({
-      amountXof: course.priceXof,
-      method: parsed.data.method,
-      phoneNumber: parsed.data.phoneNumber,
-      metadata: { userId: current.userId, courseId: course.id },
-    });
+    const providerResult = tryGetProvider();
+    if ("errorResponse" in providerResult) return providerResult.errorResponse;
+    const { provider } = providerResult;
+
+    let initiated;
+    try {
+      initiated = await provider.initiate({
+        amountXof: course.priceXof,
+        method: parsed.data.method,
+        phoneNumber: parsed.data.phoneNumber,
+        metadata: { userId: current.userId, courseId: course.id },
+      });
+    } catch (error) {
+      // Le provider (FedaPay…) a refusé ou est injoignable → 502 explicite
+      console.error("payments initiate provider error:", error);
+      return NextResponse.json(
+        {
+          ok: false,
+          error:
+            "Le service de paiement est momentanément indisponible. Réessaie dans quelques instants.",
+        },
+        { status: 502 }
+      );
+    }
 
     const [payment] = await db
       .insert(payments)
@@ -232,7 +282,7 @@ export async function POST(req: Request) {
         },
         instructions: initiated.instructions,
         redirectUrl: initiated.redirectUrl ?? null,
-        demo: isMockProvider(),
+        demo: provider.name === "mock",
       },
       { status: 201 }
     );

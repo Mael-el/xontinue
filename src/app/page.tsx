@@ -21,6 +21,11 @@ import { CourseCard } from "@/components/CourseCard";
 export const dynamic = "force-dynamic";
 
 async function ensureSeed() {
+  // Le seed automatique au premier rendu n'a lieu qu'en développement :
+  // en production, l'initialisation est une opération explicite et
+  // protégée (POST /api/seed avec l'en-tête x-seed-secret).
+  if (process.env.NODE_ENV === "production") return;
+
   const [{ count }] = await db
     .select({ count: sql<number>`count(*)::int` })
     .from(domains);
