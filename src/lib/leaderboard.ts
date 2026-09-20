@@ -28,8 +28,11 @@ const entryColumns = {
   country: users.country,
   xp: users.xp,
   streak: users.streak,
-  badgesCount: sql<number>`(select count(*) from ${userBadges} ub where ub.user_id = ${users.id})::int`,
-  coursesCompleted: sql<number>`(select count(*) from ${enrollments} e where e.user_id = ${users.id} and e.status = 'completed')::int`,
+  // Corrélations littérales vers "users" : une colonne interpolée (${users.id})
+  // serait rendue sans préfixe de table dans un select simple et captée par
+  // la sous-requête (ub.user_id = "id" → ub.id) — compteurs toujours à 0.
+  badgesCount: sql<number>`(select count(*) from ${userBadges} ub where ub.user_id = "users"."id")::int`,
+  coursesCompleted: sql<number>`(select count(*) from ${enrollments} e where e.user_id = "users"."id" and e.status = 'completed')::int`,
 };
 
 /**
@@ -58,7 +61,9 @@ export async function getUserRankEntry(
   const [row] = await db
     .select({
       ...entryColumns,
-      rank: sql<number>`(select count(*) + 1 from ${users} u2 where u2.xp > ${users.xp} and u2.status = 'active')::int`,
+      // « "users"."xp" » en littéral : l'alias u2 masque la table dans la
+      // sous-requête, la référence qualifiée pointe donc bien la table externe.
+      rank: sql<number>`(select count(*) + 1 from ${users} u2 where u2.xp > "users"."xp" and u2.status = 'active')::int`,
       totalActive: sql<number>`(select count(*) from ${users} u3 where u3.status = 'active')::int`,
     })
     .from(users)

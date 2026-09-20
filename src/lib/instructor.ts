@@ -61,8 +61,12 @@ export async function getInstructorCourses(
       status: courses.status,
       rating: courses.rating,
       studentsCount: courses.studentsCount,
-      lessonsCount: sql<number>`(select count(*) from ${lessons} l where l.course_id = ${courses.id})::int`,
-      reviewsCount: sql<number>`(select count(*) from ${courseReviews} r where r.course_id = ${courses.id})::int`,
+      // NB : la corrélation vers la table externe est écrite en littéral
+      // (« "courses"."id" ») car Drizzle rend une colonne interpolée SANS
+      // préfixe de table dans un select simple — le nom serait alors capté
+      // par la sous-requête (l.id) et le compteur vaudrait toujours 0.
+      lessonsCount: sql<number>`(select count(*) from ${lessons} l where l.course_id = "courses"."id")::int`,
+      reviewsCount: sql<number>`(select count(*) from ${courseReviews} r where r.course_id = "courses"."id")::int`,
       createdAt: courses.createdAt,
       updatedAt: courses.updatedAt,
     })
@@ -102,8 +106,10 @@ export async function getOwnedCourse(courseId: string, instructorId: string) {
       id: courses.id,
       instructorId: courses.instructorId,
       status: courses.status,
-      lessonsCount: sql<number>`(select count(*) from ${lessons} l where l.course_id = ${courses.id})::int`,
-      students: sql<number>`(select count(*) from ${enrollments} e where e.course_id = ${courses.id})::int`,
+      // Corrélation littérale (voir note dans getInstructorCourses) —
+      // sans ça, lessonsCount vaut toujours 0 et la publication est bloquée.
+      lessonsCount: sql<number>`(select count(*) from ${lessons} l where l.course_id = "courses"."id")::int`,
+      students: sql<number>`(select count(*) from ${enrollments} e where e.course_id = "courses"."id")::int`,
     })
     .from(courses)
     .where(eq(courses.id, courseId))
@@ -134,6 +140,8 @@ export async function uniqueCourseSlug(title: string): Promise<string> {
  * (arrondi à l'heure supérieure) + touche updatedAt.
  */
 export async function syncCourseDuration(courseId: string): Promise<void> {
+  // NB : pas d'alias sur « lessons » — PostgreSQL interdit de référencer
+  // une table par son nom d'origine une fois un alias déclaré (42P01).
   await db.execute(sql`
     update ${courses}
     set
@@ -141,8 +149,8 @@ export async function syncCourseDuration(courseId: string): Promise<void> {
         1,
         round(
           coalesce(
-            (select sum(${lessons.durationMinutes}) from ${lessons} l
-             where l.course_id = ${courses.id}),
+            (select sum(${lessons.durationMinutes}) from ${lessons}
+             where ${lessons.courseId} = ${courses.id}),
             0
           ) / 60.0
         )::int
