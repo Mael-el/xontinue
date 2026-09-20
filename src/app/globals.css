@@ -1,0 +1,144 @@
+@import "tailwindcss";
+
+/* ============================================================
+   THÈME GLOBAL — AfricaSkills
+   Palette : orange (#F97316), or (#F59E0B), émeraude (#059669)
+   sur fond noir (#0A0A0A) pour évoquer l'Afrique moderne.
+   ============================================================ */
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  background-color: #0a0a0a;
+  color: #f5f5f5;
+  font-family:
+    "Inter",
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Motif géométrique africain subtil en fond */
+body {
+  background-image:
+    radial-gradient(
+      circle at 10% 10%,
+      rgba(249, 115, 22, 0.08) 0%,
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 90% 20%,
+      rgba(16, 185, 129, 0.08) 0%,
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 50% 100%,
+      rgba(245, 158, 11, 0.06) 0%,
+      transparent 50%
+    );
+}
+
+/* Scrollbar custom */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+::-webkit-scrollbar-thumb {
+  background: #292524;
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #f97316;
+}
+
+/* Animation du texte gradient */
+@keyframes gradient-shift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+.animated-gradient {
+  background-size: 200% 200%;
+  animation: gradient-shift 6s ease infinite;
+}
+
+/* Motif adinkra (décoratif) */
+.adinkra-pattern {
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      rgba(249, 115, 22, 0.03) 0px,
+      rgba(249, 115, 22, 0.03) 2px,
+      transparent 2px,
+      transparent 12px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(245, 158, 11, 0.03) 0px,
+      rgba(245, 158, 11, 0.03) 2px,
+      transparent 2px,
+      transparent 12px
+    );
+}
+
+/* Ligne clignotante de statut en direct */
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+.pulse-dot {
+  animation: pulse-ring 2s infinite;
+}
+
+/* ============================================================
+   IMPRESSION — Certificats
+   À l'impression : fond blanc, navigation masquée, seule la
+   feuille certificat (.certificate-sheet) est mise en page.
+   ============================================================ */
+@media print {
+  @page {
+    size: A4 landscape;
+    margin: 8mm;
+  }
+
+  body {
+    background-color: #ffffff !important;
+    background-image: none !important;
+  }
+
+  header,
+  footer,
+  .certificate-no-print {
+    display: none !important;
+  }
+
+  .certificate-sheet {
+    box-shadow: none !important;
+    margin: 0 auto !important;
+    break-inside: avoid;
+  }
+}
