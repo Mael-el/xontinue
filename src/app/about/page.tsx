@@ -2,6 +2,8 @@
 // PAGE — À PROPOS
 // ============================================================
 
+import Link from "next/link";
+
 export default function AboutPage() {
   return (
     <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
@@ -15,11 +17,11 @@ export default function AboutPage() {
           <span className="bg-gradient-to-r from-orange-500 via-amber-400 to-emerald-500 bg-clip-text text-transparent">
             talents africains
           </span>{" "}
-          d'ici 2030.
+          d&apos;ici 2030.
         </h1>
         <p className="mx-auto mt-6 max-w-2xl text-lg text-neutral-400">
-          AfricaSkills est né d'un constat : l'Afrique a le talent, mais pas
-          toujours l'accès. Nous construisons la plateforme qui forme, certifie
+          AfricaSkills est né d&apos;un constat : l&apos;Afrique a le talent, mais pas
+          toujours l&apos;accès. Nous construisons la plateforme qui forme, certifie
           et connecte les meilleurs talents du continent aux opportunités du
           monde entier.
         </p>
@@ -80,7 +82,7 @@ export default function AboutPage() {
 
       {/* Équipe fondatrice */}
       <section className="mt-24">
-        <h2 className="text-3xl font-black text-white">L'équipe</h2>
+        <h2 className="text-3xl font-black text-white">L&apos;équipe</h2>
         <p className="mt-3 max-w-2xl text-neutral-400">
           Une équipe panafricaine de builders, ingénieurs et éducateurs qui
           croient au potentiel du continent.
@@ -120,18 +122,18 @@ export default function AboutPage() {
           une place pour toi dans notre aventure.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
-          <a
+          <Link
             href="/courses"
             className="rounded-xl bg-black px-6 py-3.5 text-sm font-bold text-white transition hover:bg-neutral-800"
           >
             Commencer à apprendre
-          </a>
-          <a
+          </Link>
+          <Link
             href="/jobs"
             className="rounded-xl bg-white px-6 py-3.5 text-sm font-bold text-black transition hover:bg-neutral-100"
           >
             Recruter un talent
-          </a>
+          </Link>
         </div>
       </section>
     </div>

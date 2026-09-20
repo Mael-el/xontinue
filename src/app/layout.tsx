@@ -15,6 +15,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="fr">
       <head>
+        {/* Inter via <link> plutôt que next/font : chargée côté navigateur,
+            aucun téléchargement requis au build (CI / environnements
+            hors-ligne). Passer à next/font/local si besoin d'auto-héberger. */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"

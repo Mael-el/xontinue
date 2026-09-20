@@ -72,10 +72,39 @@ africaskills/
 ### Prérequis
 
 - Node.js 20+
-- PostgreSQL 16
-- pnpm ou npm
+- PostgreSQL 16 — **ou** la base embarquée PGlite (aucun install, voir ci-dessous)
 
-### Installation
+### Option A — Sans PostgreSQL (base embarquée PGlite) ⚡
+
+Pratique pour essayer le projet sans installer PostgreSQL : PGlite est un
+vrai PostgreSQL compilé en WebAssembly, exposé sur `127.0.0.1:5432` par
+[`scripts/embedded-db.mjs`](./scripts/embedded-db.mjs). L'application (driver
+`pg` / Drizzle) fonctionne sans aucune modification.
+
+```bash
+# 1. Installer
+npm install
+
+# 2. Créer l'environnement pointant sur la base embarquée
+cp .env.example .env
+#   DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:5432/postgres
+#   DATABASE_POOL_MAX=1        ← obligatoire : PGlite n'accepte qu'1 connexion
+
+# 3a. Terminal 1 — base de données embarquée (données persistées dans .pglite/)
+npm run db:embedded
+
+# 3b. Terminal 2 — schéma + application
+npm run db:push
+npm run dev
+
+# 4. Initialiser les données (12 domaines, 8 cours, 80 leçons, 8 badges…)
+curl -X POST http://localhost:3000/api/seed
+```
+
+> PGlite est un outil de **développement** — en production, utiliser un vrai
+> PostgreSQL 16 (option B) et retirer `DATABASE_POOL_MAX`.
+
+### Option B — Avec PostgreSQL 16
 
 ```bash
 # 1. Cloner et installer
@@ -86,7 +115,7 @@ cp .env.example .env
 # Éditer .env avec DATABASE_URL
 
 # 3. Pousser le schéma en base
-npx drizzle-kit push
+npm run db:push
 
 # 4. Lancer le serveur de dev
 npm run dev
@@ -104,7 +133,10 @@ curl -X POST http://localhost:3000/api/seed
 | `npm run start` | Démarre en production |
 | `npm run typecheck` | Vérification TypeScript |
 | `npm run lint` | ESLint |
-| `npx drizzle-kit push` | Synchronise le schéma avec la DB |
+| `npm test` | Tests unitaires (Jest + Testing Library) |
+| `npm run test:watch` | Tests en mode watch |
+| `npm run db:embedded` | Base PostgreSQL embarquée (PGlite, dev sans install) |
+| `npm run db:push` | Synchronise le schéma avec la DB |
 | `npx drizzle-kit studio` | Interface visuelle Drizzle |
 
 ---
@@ -164,17 +196,20 @@ src/
 │   ├── BadgeCard.tsx             # Carte de badge avec rareté
 │   └── JobCard.tsx               # Carte d'offre d'emploi
 ├── db/
-│   ├── index.ts                  # Client Drizzle (pool pg)
+│   ├── index.ts                  # Client Drizzle (pool pg, taille via DATABASE_POOL_MAX)
 │   └── schema.ts                 # Schéma complet (10 tables)
-└── lib/
-    ├── seed-data.ts              # Données de seed (+ 80 leçons)
-    ├── gamification.ts           # XP, séries quotidiennes, badges auto
-    ├── notifications.ts          # Création de notifications (best-effort)
-    ├── recruiter.ts              # Guard requireRecruiter (entreprise)
-    ├── courses-query.ts          # Filtres + tri du catalogue (partagés)
-    ├── payments/                 # Providers (mock/FedaPay/KkiaPay) + règlement
-    ├── auth/                     # JWT, guards, OTP/2FA, rate-limit
-    └── format.ts                 # Utilitaires (XOF, rareté, etc.)
+├── lib/
+│   ├── seed-data.ts              # Données de seed (+ 80 leçons)
+│   ├── gamification.ts           # XP, séries quotidiennes, badges auto
+│   ├── notifications.ts          # Création de notifications (best-effort)
+│   ├── recruiter.ts              # Guard requireRecruiter (entreprise)
+│   ├── courses-query.ts          # Filtres + tri du catalogue (partagés)
+│   ├── payments/                 # Providers (mock/FedaPay/KkiaPay) + règlement
+│   ├── auth/                     # JWT, guards, OTP/2FA, rate-limit
+│   ├── format.ts                 # Utilitaires (XOF, rareté, etc.)
+│   └── **/__tests__/             # Tests unitaires (Jest + Testing Library)
+└── scripts/
+    └── embedded-db.mjs           # PostgreSQL embarqué PGlite (dev sans install)
 ```
 
 ---
@@ -374,6 +409,8 @@ backend/  (NestJS 10)
 ```env
 # Base de données
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/africaskills
+# Pool de connexions — mettre 1 UNIQUEMENT avec la base embarquée PGlite
+# DATABASE_POOL_MAX=1
 
 # Paiements
 FEDAPAY_PUBLIC_KEY=

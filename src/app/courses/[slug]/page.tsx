@@ -201,7 +201,7 @@ export default async function CourseDetailPage({
                 <li>🏆 Certificat officiel AfricaSkills</li>
                 <li>💬 Groupe Telegram privé</li>
                 <li>🇬🇧 Anglais intensif inclus (3 mois)</li>
-                <li>💼 Accès aux offres d'emploi partenaires</li>
+                <li>💼 Accès aux offres d&apos;emploi partenaires</li>
               </ul>
             </div>
 

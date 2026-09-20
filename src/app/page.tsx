@@ -140,10 +140,10 @@ export default async function HomePage() {
               </div>
 
               <h1 className="mt-6 text-4xl font-black leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl">
-                L'Afrique forme.
+                L&apos;Afrique forme.
                 <br />
                 <span className="animated-gradient bg-gradient-to-r from-orange-500 via-amber-400 to-emerald-500 bg-clip-text text-transparent">
-                  L'Afrique embauche.
+                  L&apos;Afrique embauche.
                 </span>
               </h1>
 
@@ -160,7 +160,7 @@ export default async function HomePage() {
                 <span className="font-semibold text-white">
                   connecte aux entreprises
                 </span>
-                . L'anglais professionnel en 3 mois, imposé.
+                . L&apos;anglais professionnel en 3 mois, imposé.
               </p>
 
               <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -402,12 +402,12 @@ export default async function HomePage() {
               <h2 className="mt-3 text-3xl font-black text-white sm:text-5xl">
                 Ton futur commence <br />
                 <span className="bg-gradient-to-r from-orange-400 to-amber-400 bg-clip-text text-transparent">
-                  aujourd'hui.
+                  aujourd&apos;hui.
                 </span>
               </h2>
               <p className="mt-4 text-lg text-neutral-400">
                 Inscris-toi gratuitement, choisis ton parcours, paie via Mobile
-                Money, et rejoins la plus grande communauté tech d'Afrique.
+                Money, et rejoins la plus grande communauté tech d&apos;Afrique.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link

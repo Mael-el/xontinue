@@ -7,13 +7,13 @@ export default function NotFound() {
       <div className="text-8xl">🌍</div>
       <h1 className="mt-6 text-5xl font-black text-white">404</h1>
       <p className="mt-4 text-xl text-neutral-400">
-        Cette page s'est perdue en route vers l'Afrique.
+        Cette page s&apos;est perdue en route vers l&apos;Afrique.
       </p>
       <Link
         href="/"
         className="mt-8 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 px-6 py-3.5 text-sm font-bold text-black transition hover:from-orange-400 hover:to-amber-400"
       >
-        Retour à l'accueil →
+        Retour à l&apos;accueil →
       </Link>
     </div>
   );

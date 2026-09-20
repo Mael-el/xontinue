@@ -38,7 +38,7 @@ export default async function BadgesPage() {
         </h1>
         <p className="mt-3 max-w-2xl text-neutral-400">
           Chaque formation terminée, chaque projet livré, chaque compétence
-          validée te rapporte de l'XP et débloque des badges reconnus par nos
+          validée te rapporte de l&apos;XP et débloque des badges reconnus par nos
           entreprises partenaires.
         </p>
       </div>
@@ -84,7 +84,7 @@ export default async function BadgesPage() {
       {/* Section "Comment ça marche" */}
       <section className="mt-16 rounded-3xl border border-neutral-800 bg-neutral-950 p-8 sm:p-12">
         <h2 className="text-2xl font-black text-white sm:text-3xl">
-          Comment gagner de l'XP ?
+          Comment gagner de l&apos;XP ?
         </h2>
         <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           <XpAction icon="📹" label="Terminer une leçon" xp="+10 à +50 XP" />

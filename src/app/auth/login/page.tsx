@@ -125,7 +125,7 @@ export default function LoginPage() {
             href="/auth/register"
             className="font-bold text-orange-400 hover:text-orange-300"
           >
-            S'inscrire gratuitement
+            S&apos;inscrire gratuitement
           </Link>
         </p>
       </form>

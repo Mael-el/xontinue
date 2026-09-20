@@ -96,7 +96,7 @@ export function Navbar() {
                 href="/auth/register"
                 className="rounded-lg bg-gradient-to-r from-orange-500 to-amber-500 px-4 py-1.5 text-sm font-semibold text-black shadow-lg shadow-orange-500/30 transition hover:from-orange-400 hover:to-amber-400"
               >
-                S'inscrire
+                S&apos;inscrire
               </Link>
             </>
           )}

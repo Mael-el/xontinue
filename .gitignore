@@ -27,6 +27,9 @@ yarn-error.log*
 .env*.local
 .env
 
+# base de données embarquée (PGlite — dev local)
+/.pglite/
+
 # vercel
 .vercel
 

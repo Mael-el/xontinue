@@ -34,7 +34,7 @@ export function Footer() {
           <FooterCol title="Plateforme">
             <FooterLink href="/courses">Toutes les formations</FooterLink>
             <FooterLink href="/badges">Certifications</FooterLink>
-            <FooterLink href="/jobs">Offres d'emploi</FooterLink>
+            <FooterLink href="/jobs">Offres d&apos;emploi</FooterLink>
             <FooterLink href="/dashboard">Mon espace</FooterLink>
           </FooterCol>
 

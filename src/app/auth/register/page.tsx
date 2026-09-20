@@ -258,7 +258,7 @@ function VerifyOtpForm({
         type="button"
         className="w-full text-center text-xs font-semibold text-neutral-400 hover:text-white"
       >
-        Je n'ai pas reçu le code · Renvoyer
+        Je n&apos;ai pas reçu le code · Renvoyer
       </button>
     </form>
   );

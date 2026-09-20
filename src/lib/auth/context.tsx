@@ -109,7 +109,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    refreshMe();
+    // refreshMe est asynchrone (setState après await) ; on le planifie en
+    // micro-tâche pour qu'aucun setState ne soit synchrone dans l'effet.
+    queueMicrotask(() => {
+      void refreshMe();
+    });
   }, [refreshMe]);
 
   // Auto-refresh du token toutes les 12 minutes

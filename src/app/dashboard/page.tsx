@@ -48,18 +48,32 @@ export default function DashboardPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    let cancelled = false;
     if (!isAuthenticated) {
-      setLoading(false);
-      return;
+      // Différé en micro-tâche : évite un setState synchrone dans l'effet
+      queueMicrotask(() => {
+        if (!cancelled) setLoading(false);
+      });
+      return () => {
+        cancelled = true;
+      };
     }
     fetch("/api/v1/dashboard", { credentials: "include" })
       .then((r) => r.json())
       .then((d) => {
+        if (cancelled) return;
         if (d.ok) setData(d);
         else setError(d.error);
       })
-      .catch(() => setError("Erreur réseau"))
-      .finally(() => setLoading(false));
+      .catch(() => {
+        if (!cancelled) setError("Erreur réseau");
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
   }, [isAuthenticated]);
 
   if (authLoading || loading) {
@@ -310,7 +324,7 @@ export default function DashboardPage() {
             <div className="mt-2 flex justify-between text-[10px] text-neutral-500">
               <span>-29 jours</span>
               <span>
-                <span className="text-emerald-400">■</span> Aujourd'hui
+                <span className="text-emerald-400">■</span> Aujourd&apos;hui
               </span>
             </div>
           </div>
