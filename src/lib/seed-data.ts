@@ -127,7 +127,7 @@ export const SEED_COURSES: Array<{
     domainSlug: "anglais",
     level: "beginner",
     durationHours: 60,
-    priceXof: 25000,
+    priceXof: 0,
     rating: 48,
     studentsCount: 1243,
     whatYouLearn: [
@@ -148,7 +148,7 @@ export const SEED_COURSES: Array<{
     domainSlug: "dev",
     level: "intermediate",
     durationHours: 85,
-    priceXof: 45000,
+    priceXof: 0,
     rating: 49,
     studentsCount: 892,
     whatYouLearn: [
@@ -170,7 +170,7 @@ export const SEED_COURSES: Array<{
     domainSlug: "data",
     level: "beginner",
     durationHours: 70,
-    priceXof: 35000,
+    priceXof: 0,
     rating: 47,
     studentsCount: 654,
     whatYouLearn: [
@@ -192,7 +192,7 @@ export const SEED_COURSES: Array<{
     domainSlug: "cyber",
     level: "intermediate",
     durationHours: 95,
-    priceXof: 55000,
+    priceXof: 0,
     rating: 49,
     studentsCount: 421,
     whatYouLearn: [
@@ -214,7 +214,7 @@ export const SEED_COURSES: Array<{
     domainSlug: "ia",
     level: "advanced",
     durationHours: 50,
-    priceXof: 75000,
+    priceXof: 0,
     rating: 50,
     studentsCount: 287,
     whatYouLearn: [
@@ -236,7 +236,7 @@ export const SEED_COURSES: Array<{
     domainSlug: "design",
     level: "beginner",
     durationHours: 45,
-    priceXof: 30000,
+    priceXof: 0,
     rating: 48,
     studentsCount: 512,
     whatYouLearn: [
@@ -258,7 +258,7 @@ export const SEED_COURSES: Array<{
     domainSlug: "entrepreneuriat",
     level: "intermediate",
     durationHours: 40,
-    priceXof: 40000,
+    priceXof: 0,
     rating: 49,
     studentsCount: 743,
     whatYouLearn: [
@@ -280,7 +280,7 @@ export const SEED_COURSES: Array<{
     domainSlug: "robotique",
     level: "beginner",
     durationHours: 55,
-    priceXof: 45000,
+    priceXof: 0,
     rating: 47,
     studentsCount: 198,
     whatYouLearn: [
