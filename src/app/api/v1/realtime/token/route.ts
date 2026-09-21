@@ -11,6 +11,7 @@ import { NextResponse } from "next/server";
 import { SignJWT } from "jose";
 import { requireUser } from "@/lib/auth";
 import { apiErrorResponse } from "@/lib/api/errors";
+import { publicRealtimeUrl } from "@/lib/realtime/public-url";
 
 export const dynamic = "force-dynamic";
 
@@ -32,7 +33,7 @@ function signingSecret(): Uint8Array {
   return new TextEncoder().encode(secret);
 }
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
     const user = await requireUser();
     const secret = signingSecret();
@@ -52,9 +53,9 @@ export async function GET() {
       ok: true,
       token,
       expiresIn: TTL_SECONDS,
-      /** URL publique du serveur temps réel (overridable env). */
-      realtimeUrl:
-        process.env.NEXT_PUBLIC_REALTIME_URL ?? "http://localhost:3001",
+      /** URL publique du serveur temps réel (déduite du Host en
+          preview, sinon env/local). */
+      realtimeUrl: publicRealtimeUrl(req),
     });
   } catch (error) {
     return apiErrorResponse(error);
