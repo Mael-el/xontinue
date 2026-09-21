@@ -29,6 +29,7 @@ export function Navbar() {
         </Link>
 
         <nav className="hidden items-center gap-1 md:flex">
+          {isAuthenticated && <NavLink href="/feed">Fil</NavLink>}
           <NavLink href="/courses">Formations</NavLink>
           <NavLink href="/badges">Badges</NavLink>
           <NavLink href="/leaderboard">Classement</NavLink>

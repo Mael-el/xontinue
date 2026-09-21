@@ -293,6 +293,387 @@ export const SEED_COURSES: Array<{
     requirements: ["Kit Arduino (~25 000 FCFA)", "Ordinateur"],
     instructorName: "Prof. Jean-Baptiste Ndayisaba",
   },
+
+  // ─── Extension catalogue (recherche en ligne 2026 ────────
+  // inspirée d'Andela/Decagon/AltSchool, ALX Data & AI,
+  // parcours SOC/Security+, TEFConnect Entrepreneurship) ────
+
+  // Anglais — 2ᵉ cours
+  {
+    slug: "business-english-ielts-prep",
+    title: "English for Business & préparation IELTS",
+    subtitle: "Le ton juste en entretien, en réunion et à l'écrit",
+    description:
+      "Formation bilingue orientée communication professionnelle : emails percutants, réunions Zoom, négociations. Préparation complète IELTS Academic & General avec 4 tests blancs corrigés.",
+    domainSlug: "anglais",
+    level: "intermediate",
+    durationHours: 65,
+    priceXof: 0,
+    rating: 48,
+    studentsCount: 964,
+    whatYouLearn: [
+      "Vocabulaire business (finance, tech, RH)",
+      "Rédaction d'emails et rapports professionnels",
+      "Animation de réunions en anglais",
+      "4 tests blancs IELTS corrigés",
+      "Entretien d'embauche en anglais",
+    ],
+    requirements: ["Niveau A2 minimum", "30 min de pratique quotidienne"],
+    instructorName: "Mrs. Grace Adeyemi",
+  },
+
+  // Développement — 2ᵉ cours
+  {
+    slug: "flutter-apps-mobiles",
+    title: "Flutter & Dart — Apps mobiles Android & iOS",
+    subtitle: "Une seule base de code, deux stores",
+    description:
+      "Développe des applications mobiles performantes et belles avec Flutter : widgets, état avec Riverpod, connexions API, hors-ligne avec Hive, publication sur le Play Store. Capstone : clone d'une app fintech africaine (mobile money).",
+    domainSlug: "dev",
+    level: "intermediate",
+    durationHours: 75,
+    priceXof: 0,
+    rating: 48,
+    studentsCount: 537,
+    whatYouLearn: [
+      "Langage Dart & widgets Flutter",
+      "Gestion d'état avec Riverpod",
+      "Consommation d'API REST",
+      "Persistance hors-ligne (Hive/SQLite)",
+      "Publication sur Play Store",
+      "Capstone : app mobile money",
+    ],
+    requirements: ["Bases d'un langage (JS ou Python)", "Mac non requis (Android suffit)"],
+    instructorName: "Kofi Boateng",
+  },
+
+  // Data & Analyse — 2ᵉ cours
+  {
+    slug: "power-bi-dashboards",
+    title: "Power BI & Tableaux de bord décisionnels",
+    subtitle: "De la donnée brute au dashboard qui parle au CEO",
+    description:
+      "Inspiré des programmes Data Analytics reconnus : nettoyage et modélisation de données (DAX), storytelling visuel, dashboards de ventes et de logistique pour PME africaines. Tu livreras 4 dashboards professionnels.",
+    domainSlug: "data",
+    level: "beginner",
+    durationHours: 35,
+    priceXof: 0,
+    rating: 47,
+    studentsCount: 1108,
+    whatYouLearn: [
+      "Nettoyage de données avec Power Query",
+      "Modélisation en étoile et mesures DAX",
+      "Storytelling : choisir le bon visuel",
+      "4 dashboards métier complets",
+      "Publication et partage au format web",
+    ],
+    requirements: ["Aisance avec Excel", "Aucune base de code requise"],
+    instructorName: "Éliane Kiptoo",
+  },
+
+  // Cybersécurité — 2ᵉ cours
+  {
+    slug: "soc-analyst-siem",
+    title: "SOC Analyst & SIEM — Détecter et répondre aux attaques",
+    subtitle: "Le premier emploi cyber le plus demandé en Afrique",
+    description:
+      "Formation opérationnelle pour postes SOC Tier 1 : surveillance, triangulation d'incidents, SIEM Splunk & Sentinel, playbooks de réponse, préparation CompTIA Security+ et CySA+. Labs sur des logs réels d'entreprises africaines (anonymisés).",
+    domainSlug: "cyber",
+    level: "intermediate",
+    durationHours: 80,
+    priceXof: 0,
+    rating: 49,
+    studentsCount: 302,
+    whatYouLearn: [
+      "Rôle du SOC et cycle de vie d'un incident",
+      "SIEM Splunk et Microsoft Sentinel en pratique",
+      "Écriture de règles de détection (Sigma)",
+      "Playbooks de réponse à incident",
+      "Préparation CompTIA Security+ / CySA+",
+    ],
+    requirements: ["Bases réseaux (TCP/IP)", "Connaissance Linux recommandée"],
+    instructorName: "Mamadou Sy",
+  },
+
+  // Intelligence Artificielle — 2ᵉ cours
+  {
+    slug: "machine-learning-fondamentaux",
+    title: "Machine Learning — Fondamentaux solides",
+    subtitle: "Régression, classification et arbres avant le deep learning",
+    description:
+      "Les fondations préalables à l'IA moderne : scikit-learn, feature engineering, validation croisée, métriques, puis projets concrets — scoring de solvabilité micro-finance, prédiction de rendement agricole, détection de fraude mobile money.",
+    domainSlug: "ia",
+    level: "intermediate",
+    durationHours: 60,
+    priceXof: 0,
+    rating: 48,
+    studentsCount: 611,
+    whatYouLearn: [
+      "Scikit-learn : classification et régression",
+      "Feature engineering sur données africaines",
+      "Validation croisée et métriques utiles (F1, AUC)",
+      "Scoring de crédit micro-finance",
+      "Fraude mobile money & rendement agricole",
+    ],
+    requirements: ["Python niveau débutant+", "Notions de statistiques (moyennes, probas)"],
+    instructorName: "Kwasi Appiah",
+  },
+
+  // Design UI/UX — 2ᵉ cours
+  {
+    slug: "motion-design-branding",
+    title: "Motion Design & Identité de marque",
+    subtitle: "L'animation qui donne vie aux marques africaines",
+    description:
+      "Crée des identités visuelles et des animations percutantes pour les réseaux sociaux : After Effects, principes du motion, logo animé, kits social media. Projet final : kit complet d'une startup panafricaine.",
+    domainSlug: "design",
+    level: "beginner",
+    durationHours: 40,
+    priceXof: 0,
+    rating: 46,
+    studentsCount: 356,
+    whatYouLearn: [
+      "Fondamentaux du branding et de la typographie",
+      "After Effects : keyframes et easings",
+      "Logo animé et intros YouTube",
+      "Kit social media animé",
+      "Portfolio Ready-to-client",
+    ],
+    requirements: ["Bases Figma (ou cours UI/UX AfricaSkills)", "PC avec 8 Go de RAM"],
+    instructorName: "Coralie Bibassa",
+  },
+
+  // Mathématiques — 2 cours (domaine sans cours)
+  {
+    slug: "stats-pour-la-data",
+    title: "Statistiques pour la Data — les vraies bases",
+    subtitle: "Comprendre avant de modéliser",
+    description:
+      "La statistique appliquée qu'attendent les data teams : probabilités, distributions, tests d'hypothèse, p-value sans magie, intervalles de confiance — expliqués avec des datasets africains (santé, marchés, mobile money).",
+    domainSlug: "maths",
+    level: "beginner",
+    durationHours: 50,
+    priceXof: 0,
+    rating: 47,
+    studentsCount: 845,
+    whatYouLearn: [
+      "Statistique descriptive qui parle",
+      "Probabilités et théorème de Bayes",
+      "Distributions utiles (normale, binomiale, Poisson)",
+      "Tests d'hypothèse et p-value démystifiée",
+      "Analyse de datasets africains réels",
+    ],
+    requirements: ["Bases de calcul collège/lycée"],
+    instructorName: "Dr. Halima Yusuf",
+  },
+  {
+    slug: "maths-appliquees-ingenieurs",
+    title: "Mathématiques appliquées pour ingénieurs",
+    subtitle: "Algèbre linéaire, calcul différentiel, optimisation",
+    description:
+      "Le socle mathématique de l'ingénieur et du ML : matrices, systèmes, dérivées et intégrales, optimisation avec gradient. Chaque concept est branché sur un problème concret : structures, électricité, machine learning.",
+    domainSlug: "maths",
+    level: "advanced",
+    durationHours: 70,
+    priceXof: 0,
+    rating: 46,
+    studentsCount: 219,
+    whatYouLearn: [
+      "Algèbre linéaire : matrices et changements de base",
+      "Calcul différentiel et intégral appliqué",
+      "Optimisation : gradient et méthodes numériques",
+      "Lien direct avec le machine learning",
+      "Résolution de problèmes d'ingénierie",
+    ],
+    requirements: ["Bonnes bases au lycée", "Cahier d'exercices inclus"],
+    instructorName: "Prof. Serge Mékou",
+  },
+
+  // Physique — 2 cours (domaine sans cours)
+  {
+    slug: "electricite-electronique-debutants",
+    title: "Électricité & électronique pratiques — débutants",
+    subtitle: "Comprendre le courant avant de coder l'Arduino",
+    description:
+      "Loi d'Ohm, circuits en série/parallèle, mesures au multimètre, sécurité électrique domestique. Le préalable idéal à la robotique et à l'autoconsommation solaire pour la maison.",
+    domainSlug: "physique",
+    level: "beginner",
+    durationHours: 30,
+    priceXof: 0,
+    rating: 45,
+    studentsCount: 683,
+    whatYouLearn: [
+      "Tension, courant, résistance et loi d'Ohm",
+      "Lecture de schémas et circuits pratiques",
+      "Mesure au multimètre en sécurité",
+      "Bases de l'électricité domestique",
+      "Liens avec les panneaux solaires",
+    ],
+    requirements: ["Aucun prérequis"],
+    instructorName: "Didier Kaboré",
+  },
+  {
+    slug: "energie-solaire-installations",
+    title: "Énergie solaire — Dimensionner et installer",
+    subtitle: "De la demande du foyer au kit complet prêt à poser",
+    description:
+      "Dimensionnement de panneaux, batteries et régulateurs pour une habitation africaine, bilan d'énergie solaire, règles antichute et normalisation. Étude de cas : maison rurale + pompe solaire de forage.",
+    domainSlug: "physique",
+    level: "intermediate",
+    durationHours: 45,
+    priceXof: 0,
+    rating: 48,
+    studentsCount: 934,
+    whatYouLearn: [
+      "Bilan énergétique d'une habitation",
+      "Dimensionner panneaux et batteries",
+      "Regulateurs PWM vs MPPT",
+      "Installation type et sécurité chantier",
+      "Cas réel : pompe solaire de forage",
+    ],
+    requirements: ["Cours électricité débutants (ou équivalent)"],
+    instructorName: "Engr. Olayemi Adekunle",
+  },
+
+  // Lecture rapide — 2 cours (domaine sans cours)
+  {
+    slug: "lecture-rapide-3x",
+    title: "Lecture rapide niveau 1 — lis 3× plus vite",
+    subtitle: "Techniques mesurables de fixation et de balayage",
+    description:
+      "Méthode progressive : élargissement du champ visuel, lecture en groupes de mots, exercices quotidiens chronométrés sur tes propres textes professionnels. De 250 à 750 mots/min sans perdre la compréhension.",
+    domainSlug: "lecture",
+    level: "beginner",
+    durationHours: 12,
+    priceXof: 0,
+    rating: 46,
+    studentsCount: 1547,
+    whatYouLearn: [
+      "Élargissement du champ visuel",
+      "Lecture en chunks plutôt qu'en mots",
+      "Exercices chronométrés quotidiens",
+      "Garder la compréhension à grande vitesse",
+      "Routine de 15 min par jour",
+    ],
+    requirements: ["Aucun prérequis"],
+    instructorName: "Nadège Ahouansou",
+  },
+  {
+    slug: "memoire-mind-mapping",
+    title: "Mémoire & Mind Mapping — retenir l'essentiel",
+    subtitle: "Palais de la mémoire et notes visuelles pour examens",
+    description:
+      "Techniques des champions de mémoire : méthode des lieux, associations visuelles, répétition espacée. Avec le mind mapping d'étude : synthetrise un livre entier sur une page.",
+    domainSlug: "lecture",
+    level: "beginner",
+    durationHours: 15,
+    priceXof: 0,
+    rating: 47,
+    studentsCount: 1204,
+    whatYouLearn: [
+      "Palais de la mémoire pas à pas",
+      "Associations visuelles et histoires",
+      "Répétition espacée (courbe d'Ebbinghaus)",
+      "Mind mapping de synthèse d'un livre",
+      "Application aux examens et concours",
+    ],
+    requirements: ["Aucun prérequis"],
+    instructorName: "Nadège Ahouansou",
+  },
+
+  // Ingénierie — 2 cours (domaine sans cours)
+  {
+    slug: "autocad-cao-debutants",
+    title: "AutoCAD & CAO — Dessiner comme un ingénieur",
+    subtitle: "2D, cotations et plans pour le bâtiment",
+    description:
+      "AutoCAD de zéro : interface, commandes essentielles, calques, cotation, mise en page des plans pour chantier. Projet : plan complet d'une maison 4 pièces prêt à l'impression.",
+    domainSlug: "ingenierie",
+    level: "beginner",
+    durationHours: 40,
+    priceXof: 0,
+    rating: 46,
+    studentsCount: 467,
+    whatYouLearn: [
+      "Interface et commandes AutoCAD essentielles",
+      "Calques, bloques et symboles",
+      "Cotation et mise en échelle",
+      "Mise en page pour impression chantier",
+      "Plan complet d'une maison 4 pièces",
+    ],
+    requirements: ["PC sous Windows (ou exporter le plan via AnyCAD)"],
+    instructorName: "Engr. Babatunde Folami",
+  },
+  {
+    slug: "structures-genie-civil",
+    title: "Structures & matériaux du génie civil",
+    subtitle: "Comprendre avant de bâtir — la logique des ouvrages durables",
+    description:
+      "Introduction aux lois de la RDM : moments, traction-compression, béton armé, choix des matériaux selon le contexte africain. Étude de cas : ce qui fait tomber un bâtiment et comment l'éviter.",
+    domainSlug: "ingenierie",
+    level: "intermediate",
+    durationHours: 60,
+    priceXof: 0,
+    rating: 47,
+    studentsCount: 288,
+    whatYouLearn: [
+      "Équilibres, forces et moments",
+      "RDM : traction, compression, flexion",
+      "Logique du béton armé",
+      "Choix de matériaux en contexte africain",
+      "Étude de pannes réelles et prévention",
+    ],
+    requirements: ["Bases de mathématiques appliquées"],
+    instructorName: "Tsiri Rasoavelo",
+  },
+
+  // Robotique — 2ᵉ cours
+  {
+    slug: "drones-iot-embarque",
+    title: "Drones & IoT embarqué — capteurs qui parlent",
+    subtitle: "Du capteur d'humidité de champ au mini-drone téléguidé",
+    description:
+      "Assemble des objets connectés en Python (MicroPython) : ESP32, capteurs environnementaux, communication LoRa/WiFi, enregistrement sur serveur. Deux projets : station météo de ferme et drone agricole de démarrage.",
+    domainSlug: "robotique",
+    level: "intermediate",
+    durationHours: 65,
+    priceXof: 0,
+    rating: 48,
+    studentsCount: 176,
+    whatYouLearn: [
+      "MicroPython sur ESP32",
+      "Capteurs : température, humidité, sol, lumière",
+      "Communication WiFi, Bluetooth, LoRa",
+      "Stockage et alertes vers un serveur",
+      "Projets : station météo + drone agricole",
+    ],
+    requirements: ["Bases d'Arduino ou de Python"],
+    instructorName: "Chinedu Okafor",
+  },
+
+  // Entrepreneuriat — 2ᵉ cours
+  {
+    slug: "agripreneuriat-agriculture-entreprise",
+    title: "Agripreneuriat — De la terre à l'entreprise agricole",
+    subtitle: "Business plan, finance verte et accès aux marchés",
+    description:
+      "Inspiré des grands programmes panafricains d'entrepreneuriat (12 semaines, mentorat, pitching final) : validation de l'idée, études de marché locales, business plan agricole bancable, financements (fonds vert, TEF-style $5k mai 2026).",
+    domainSlug: "entrepreneuriat",
+    level: "beginner",
+    durationHours: 50,
+    priceXof: 0,
+    rating: 49,
+    studentsCount: 1293,
+    whatYouLearn: [
+      "Valider son idée agricole au précoût",
+      "Business plan bancable d'une exploitation",
+      "Accès aux marchés et à la transformation",
+      "Financements agricoles et pitch de levée",
+      "Mentorat business en 12 semaines",
+    ],
+    requirements: ["Aucun prérequis — idée ou exploitation 0-3 ans"],
+    instructorName: "Yacine Belmekki",
+  },
 ];
 
 export const SEED_BADGES = [
@@ -517,6 +898,91 @@ export const SEED_JOBS: Array<{
 ];
 
 // ============================================================
+// PUBLICATIONS DU FIL SOCIAL (démo) — voix de la communauté.
+// Insérées UNIQUEMENT si la table posts est vide (démo accueillante,
+// pas d'écrasement des publications réelles).
+// authorName doit correspondre à un instructeur du seed.
+// ============================================================
+export const SEED_POSTS: Array<{
+  authorName: string;
+  content: string;
+  imageUrl?: string;
+}> = [
+  {
+    authorName: "Mrs. Grace Adeyemi",
+    content:
+      "🎯 Session IELTS blanche ce samedi ! Les inscrits à « Anglais des affaires & préparation IELTS » : révisez la leçon sur le Writing Task 2 — structure intro/thèse/exemples/conclusion. Objectif : 7.0+ pour décrocher vos visas d'études ! ✍️",
+  },
+  {
+    authorName: "Kwasi Appiah",
+    content:
+      "Le capstone Flutter du clone app mobile money arrive à la semaine 5 🚀 N'oubliez pas : l'AFRIQUE de l'app, c'est HORS-LIGNE d'abord. Un utilisateur de Cotonou ou Kano doit pouvoir consulter son historique sans forfait data. Codez pour le 2G, pas pour le 5G.",
+  },
+  {
+    authorName: "Mamadou Sy",
+    content:
+      "🔴 Alerte SOC : nous avons simulé une campagne de phishing ciblant des PME béninoises en cours d'exercice. Résultat des élèves : 92 % de détection réussie via Splunk en moins de 8 minutes. Les indicateurs étaient cachés dans les logs DNS — les règles Sigma sauvent des vies (numériques).",
+  },
+  {
+    authorName: "Dr. Halima Yusuf",
+    content:
+      "Question de la semaine posée en ML fondamentaux : « Pourquoi mon modèle de scoring de crédit micro-finance a 99 % de précision mais est inutilisable ? » Réponse en 3 mots : fuite d'étiquette (data leakage). La feature « montant remboursé » n'existe pas AVANT la décision de prêt 😅",
+  },
+  {
+    authorName: "Didier Kaboré",
+    content:
+      "☀️ Installation d'un kit solaire 1,2 kWc à Ouagadougou cette semaine ! Courbes de charge des batteries lithium vs AGM en commentaire — le lithium gagne sur 8 ans d'usage malgré le prix initial. L'électrification rurale passe par VOUS, futurs installateurs.",
+    imageUrl:
+      "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=800",
+  },
+  {
+    authorName: "Éliane Kiptoo",
+    content:
+      "Power BI vs Excel : arrêtez le débat, prenez les DEUX 🙌 Power Query transforme vos exports SAP/paie en données propres, Excel reste votre bloc-notes de calcul. Dashboard logistique du corridor Cotonou–Parakou publié en exemple dans le module 5.",
+  },
+  {
+    authorName: "Coralie Bibassa",
+    content:
+      "Vos kit social media animés sont… impressionnants 🔥 Motion design module 5 : une startup sénégalaise en vrai brief a été bluffée par 3 de vos portfolios. La VENTE de votre savoir faire compte autant que la technique. Félicitations à toute la promo motion !",
+  },
+  {
+    authorName: "Prof. Serge Mékou",
+    content:
+      "🧹 Les mathématiques ne sont pas l'ennemi de l'ingénieur — la p-value, si ! (blague de stats). Le dataset vaccination est en ligne pour le module 6 : population réelle anonymisée de 3 pays de la CEDEAO. Interprétez les intervalles de confiance, pas seulement les moyennes.",
+  },
+  {
+    authorName: "Nadège Ahouansou",
+    content:
+      "PASS n°2 de lecture rapide pour la promo : la médiane est passée de 190 à 420 mots/minute. Et surtout, la compréhension est restée à 85 % 📖 Le mind mapping module 6 va transformer vos révisions — une page A4 = un livre entier.",
+  },
+  {
+    authorName: "Engr. Babatunde Folami",
+    content:
+      "⚠️ AutoCAD : les 3 erreurs qui font pleurer les chantiers — cotations illisibles à l'échelle 1/50, calques en freestyle, blocs modifiés « côté client ». Plan maison 4 pièces à déposer vendredi minuit. Propreté de dessin = professionnalisme.",
+  },
+  {
+    authorName: "Chinedu Okafor",
+    content:
+      "Premiers vols de drones agricoles réussis 🚁 sur la parcelle d'essai : cartographie NDVI par imagerie multispectrale simplifiée. 12 ha surveillés en 22 minutes contre 3 jours de scouting à pied. La station météo LoRa remonte ses données sur le dashboard temps réel — regardez le module 5.",
+  },
+  {
+    authorName: "Yacine Belmekki",
+    content:
+      "💼 Pitch final agripreneuriat : 4 étudiants ont obtenu un financement simulé. Ce qui a fait la différence : pas le PowerPoint, la CLARTÉ du modèle économique. 1 hectare de maraîchage + transformation locale de tomates = marge ×3 par rapport à la vente brute. Le business plan bancable, c'est le module 3.",
+  },
+];
+
+// Snippets de commentaires de démo (répartis en rond sur les posts)
+export const SEED_POST_COMMENTS: string[] = [
+  "Bravo, super formation 👏",
+  "Je m'inscris de ce pas !",
+  "Merci pour ce partage, très inspirant 🙏",
+  "On se retrouve samedi pour la session live 🔥",
+  "Cette approche a changé ma vision du sujet.",
+  "Possible de partager les supports ? 😊",
+];
+
+// ============================================================
 // LEÇONS DE DÉMONSTRATION — titres ordonnés par slug de cours
 // Chaque titre devient une leçon (order = index + 1, XP = 10).
 // ============================================================
@@ -617,5 +1083,134 @@ export const SEED_LESSONS: Record<string, string[]> = {
     "Projet : véhicule éviteur d'obstacles",
     "Projet : bras robotisé commandé",
     "Projet final : ton robot autonome",
+  ],
+
+  "business-english-ielts-prep": [
+    "Emails professionnels : les 5 structures qui marchent",
+    "Animer une réunion Zoom en anglais",
+    "Vocabulaire business : finance, tech, RH",
+    "IELTS Reading : stratégies de skimming & scanning",
+    "IELTS Writing Task 1 & 2 : méthode complète",
+    "Test blanc IELTS n°1 corrigé en direct",
+  ],
+  "flutter-apps-mobiles": [
+    "Dart : langage en vitesse pour devs confirmés",
+    "Widgets, layouts et navigation entre écrans",
+    "Riverpod : la gestion d'état moderne",
+    "Appels API REST et gestion des erreurs",
+    "Hors-ligne : Hive, SQLite et synchronisation",
+    "Capstone : clone d'une app mobile money",
+  ],
+  "power-bi-dashboards": [
+    "Power Query : nettoyer n'importe quel fichier Excel",
+    "Modélisation en étoile pas à pas",
+    "DAX : mesures, CALCULATE, filtrage",
+    "Storytelling : les 8 visuels à maîtriser",
+    "Dashboard ventes pour PME béninoise",
+    "Dashboard logistique + publication web",
+  ],
+  "soc-analyst-siem": [
+    "Le SOC : rôles, seuils et cycle de l'incident",
+    "Splunk : recherches sur des logs réels",
+    "Sentinel : connecteurs et workbook de triage",
+    "Règles Sigma : écrire une règle de détection",
+    "Playbook : réponse à un phishing en équipe",
+    "Révision : CompTIA Security+ et CySA+",
+  ],
+  "machine-learning-fondamentaux": [
+    "De la donnée au modèle : le pipeline complet",
+    "Régression : prédire un prix ou un rendement",
+    "Classification : arbres et forêts",
+    "Feature engineering sur données africaines",
+    "Projet : scoring de crédit micro-finance",
+    "Projet : fraude mobile money",
+  ],
+  "motion-design-branding": [
+    "Branding : le minimum qui fait la différence",
+    "After Effects : keyframes et easings",
+    "Animer un logo (masque, morphing, écriture)",
+    "Intros YouTube et habillage de chaîne",
+    "Kit social media animé pour une startup",
+    "Livrer un portfolio « prêt client »",
+  ],
+  "stats-pour-la-data": [
+    "Statistique descriptive : moyenne vs médiane",
+    "Probabilités au quotidien et théorème de Bayes",
+    "Les distributions qu'on croise vraiment",
+    "Tests d'hypothèse et p-value démystifiée",
+    "Intervalles de confiance en pratique",
+    "Étude : campagne de vaccination (dataset réel)",
+  ],
+  "maths-appliquees-ingenieurs": [
+    "Matrices et systèmes linéaires",
+    "Changements de base et stabilité",
+    "Dérivées et taux de variation appliqués",
+    "Intégrales et calcul de surfaces",
+    "Optimisation : gradient en 2D visualisé",
+    "Le lien avec le machine learning",
+  ],
+  "electricite-electronique-debutants": [
+    "Tension, courant, résistance : la loi d'Ohm",
+    "Circuits série et parallèle en pratique",
+    "Lire un schéma électrique simple",
+    "Mesurer au multimètre sans casse",
+    "Électricité de la maison : sécurité & économies",
+    "Le chemin du courant solaire maison",
+  ],
+  "energie-solaire-installations": [
+    "Bilan énergétique d'une habitation africaine",
+    "Dimensionner panneaux et onduleurs",
+    "Batteries : AGM, lithium, cycles et durée",
+    "Régulateurs PWM vs MPPT en pratique",
+    "Cas : kit solaire maison rurale complet",
+    "Cas : pompe solaire de forage",
+  ],
+  "lecture-rapide-3x": [
+    "Mesurer ta vitesse actuelle (PASS n°1)",
+    "Élargir le champ visuel : exercices guidés",
+    "Lire en groupes de mots, pas en mots",
+    "Balayer un document : les 3 balayages",
+    "Garder la compréhension à grande vitesse",
+    "PASS n°2 : comparaison avant/après",
+  ],
+  "memoire-mind-mapping": [
+    "Comment marche ta mémoire (modèle simple)",
+    "Le palais de la mémoire en 5 cases",
+    "Associations visuelles et personnages",
+    "Répétition espacée : ton planning",
+    "Mind Mapping d'étude pas à pas",
+    "Synthétiser un livre entier sur une page A4",
+  ],
+  "autocad-cao-debutants": [
+    "Interface AutoCAD : orientation en 20 minutes",
+    "Les 10 commandes à connaître à tout prix",
+    "Calques, blocs et symboles réutilisables",
+    "Cotations et échelles propres",
+    "Mise en page pour l'impression chantier",
+    "Projet : plan d'une maison 4 pièces",
+  ],
+  "structures-genie-civil": [
+    "Forces, équilibres et moments en 2D",
+    "Traction, compression et flexion",
+    "Béton et armatures : la logique",
+    "Dimensionner une poutre simple",
+    "Matériaux en contexte africain",
+    "Panne réelle : pourquoi ce bâtiment s'est effondré",
+  ],
+  "drones-iot-embarque": [
+    "MicroPython sur ESP32 : premier clignotement",
+    "Lecture de capteurs environnementaux",
+    "WiFi vs LoRa : le choix selon la distance",
+    "Envoyer des mesures vers un serveur",
+    "Station météo de ferme connectée",
+    "Drone agricole : matériel, sécurité, législation",
+  ],
+  "agripreneuriat-agriculture-entreprise": [
+    "Agri-inventaire : tes atouts et tes terres",
+    "Valider l'idée sans tout miser d'emblée",
+    "Business plan bancable d'exploitation",
+    "Accès aux marchés et transformation locale",
+    "Financements : fonds vert, TEF-style et pitch",
+    "Capstone : pitch final et foyer de reprise",
   ],
 };

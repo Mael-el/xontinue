@@ -858,3 +858,4 @@ export const jobApplicationsRelations = relations(
 
 export * from "./schema-workspace";
 export * from "./schema-chat";
+export * from "./schema-social";

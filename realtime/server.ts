@@ -456,6 +456,10 @@ chatNs.use(jwtAuth);
 chatNs.on("connection", (socket) => {
   const userId = socket.data.userId as string;
   void socket.join(`user:${userId}`);
+  // Fil social : tout utilisateur connecté reçoit les nouveaux
+  // posts en direct (room publique, lecture seule — l'écriture
+  // passe par l'API REST /api/v1/social/posts).
+  void socket.join("feed");
 
   // --- Présence : première socket → en ligne -------------------
   const sockets = chatSockets.get(userId) ?? new Set<string>();
